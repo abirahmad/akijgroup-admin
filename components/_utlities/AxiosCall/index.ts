@@ -7,7 +7,7 @@ interface IAxiosCall {
     data?: any;
 }
 
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = 'http://admin-api.test/api/v1';
 
 const API = Axios.create({
     baseURL: BASE_URL,
