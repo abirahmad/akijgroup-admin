@@ -1,6 +1,8 @@
+import React from 'react';
+
 interface IStatusBadge {
     status: string;
-    className?: React.CSSProperties['className'];
+    className?: string; // Corrected type for className
     left?: React.ReactNode;
     right?: React.ReactNode;
 }
@@ -19,7 +21,7 @@ export default function StatusBadge({ status = '', className, left = <></>, righ
             colorClass = 'bg-green-500 text-white';
             break;
         case 'rejected':
-            colorClass = 'bg-red-200 text-red-700';;
+            colorClass = 'bg-red-200 text-red-700';
             break;
         case 'expired':
             colorClass = 'bg-gray-200 text-gray-700';
