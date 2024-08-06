@@ -1,12 +1,12 @@
 import Button from "@/components/button";
-import Tooltip from '@/components/tooltip';
+import Tooltip from "@/components/tooltip"; // Ensure this path is correct
 
 interface IDeleteIconButton {
     onClick: () => void;
 }
 
 interface IDeleteIconButtonTooltip extends IDeleteIconButton {
-    toooltipTitle: string;
+    tooltipTitle: string; // Corrected the typo here
 }
 
 export function DeleteIconButton({ onClick }: IDeleteIconButton) {
@@ -18,13 +18,13 @@ export function DeleteIconButton({ onClick }: IDeleteIconButton) {
         >
             <i className='bi bi-trash'></i>
         </Button>
-    )
+    );
 }
 
-export function DeleteIconButtonTooltip({ onClick, toooltipTitle }: IDeleteIconButtonTooltip) {
+export function DeleteIconButtonTooltip({ onClick, tooltipTitle }: IDeleteIconButtonTooltip) {
     return (
-        <Tooltip content={toooltipTitle}>
+        <Tooltip content={tooltipTitle}>
             <DeleteIconButton onClick={onClick} />
         </Tooltip>
-    )
+    );
 }
