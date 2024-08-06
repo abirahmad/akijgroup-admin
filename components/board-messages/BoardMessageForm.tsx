@@ -22,8 +22,8 @@ export default function BoardMessageForm({ id, pageType}: IBoardMessageForm) {
     const { messageInput, isSubmitting, isLoadingDetails } = useSelector((state: RootState) => state.message);
 
 
-    const handleChangeTextInput = async (name: string, value: any, e: any) => {
-         dispatch(changeInputValue(name, value, e));
+    const handleChangeTextInput = async (name: string, value: any) => {
+         dispatch(changeInputValue(name, value));
     };
 
     const debouncedDispatch = useCallback(
