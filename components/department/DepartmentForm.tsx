@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { RootState } from '@/redux/store';
 import Loading from '@/components/loading';
 import Button from '@/components/button';
@@ -10,20 +9,21 @@ import PageHeader from '@/components/layouts/PageHeader';
 import { PageContent } from '@/components/layouts/PageContent';
 import { changeInputValue, createDepartment, getDepartmentDetails, updateDepartment } from '@/redux/actions/department-action';
 import { useCallback, useEffect } from 'react';
+import { ThunkDispatch } from 'redux';
+import { AnyAction } from 'redux';
 
 interface IDepartmentForm {
     id: number;
     pageType: 'create' | 'edit' | 'profile';
 }
 
-export default function DepartmentForm({ id, pageType}: IDepartmentForm) {
+export default function DepartmentForm({ id, pageType }: IDepartmentForm) {
     const router = useRouter();
-    const dispatch = useDispatch();
-    const { departmentInput, isSubmitting, isLoadingDetails,departmentDetails } = useSelector((state: RootState) => state.department);
+    const dispatch = useDispatch<ThunkDispatch<RootState, void, AnyAction>>();
+    const { departmentInput, isSubmitting, isLoadingDetails } = useSelector((state: RootState) => state.department);
 
-
-    const handleChangeTextInput = async (name: string, value: any, e: any) => {
-         dispatch(changeInputValue(name, value, e));
+    const handleChangeTextInput = (name: string, value: any, e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(changeInputValue(name, value, e));
     };
 
     const debouncedDispatch = useCallback(
@@ -32,30 +32,30 @@ export default function DepartmentForm({ id, pageType}: IDepartmentForm) {
                 dispatch(getDepartmentDetails(id));
             }
         }, 500),
-        [id]
+        [id, dispatch]
     );
 
     useEffect(() => {
         debouncedDispatch();
-        return debouncedDispatch.cancel;
+        return () => debouncedDispatch.cancel();
     }, [debouncedDispatch]);
 
-    const onSubmit = (e: any) => {
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formattedInputObject = {
             ...departmentInput,
-        }
+        };
 
         if (pageType === 'create') {
             dispatch(createDepartment(formattedInputObject, router));
         } else {
             dispatch(updateDepartment(formattedInputObject, router, pageType));
         }
-    }
+    };
 
     const getMainPageTitle = () => {
         return 'Department';
-    }
+    };
 
     const getPageTitle = () => {
         let title = '';
@@ -68,7 +68,7 @@ export default function DepartmentForm({ id, pageType}: IDepartmentForm) {
         title += getMainPageTitle();
 
         return title;
-    }
+    };
 
     return (
         <>
@@ -86,14 +86,14 @@ export default function DepartmentForm({ id, pageType}: IDepartmentForm) {
                     </div>
                 }
 
-                {isLoadingDetails === false && typeof departmentInput !== "undefined" && departmentInput !== null && (
+                {isLoadingDetails === false && departmentInput && (
                     <form
                         method="post"
                         autoComplete="off"
                         encType="multipart/form-data"
+                        onSubmit={onSubmit} // Moved onSubmit to the form tag
                     >
                         <div className="grid gap-2 grid-cols-1 md:grid-cols-1">
-
                             <div className='md:ml-4 col-span-4'>
                                 <div className='grid gap-2 grid-cols-1 md:grid-cols-2'>
                                     <Input
@@ -114,19 +114,17 @@ export default function DepartmentForm({ id, pageType}: IDepartmentForm) {
                                     />
                                 </div>
                             </div>
-
                         </div>
 
                         <Button
                             title='Save'
                             loadingTitle="Saving..."
-                            onClick={(e) => onSubmit(e)}
+                            onClick={(e) => onSubmit(e as any)} // Type casting to any if needed
                             loading={isSubmitting}
                         />
                     </form>
-                )
-                }
+                )}
             </PageContent>
         </>
-    )
+    );
 }
