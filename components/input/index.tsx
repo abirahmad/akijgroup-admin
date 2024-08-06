@@ -1,22 +1,23 @@
 import DatePicker from "react-datepicker";
 import ValidationMessage from "../validationMessage";
 import { format } from "date-fns";
+import { ChangeEvent, FocusEvent } from "react";
 
 interface IInput {
   name?: string;
-  value?: any;
-  inputChange?: void | any;
-  handleBlur?: void | any;
+  value?: string | number | Date | null; // Updated value type
+  inputChange?: (name: string, value: string | number | boolean) => void; // Updated type
+  handleBlur?: (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   placeholder?: string;
   label?: string;
   type?: string;
   isRequired?: boolean;
   isDisabled?: boolean;
-  errors?: any;
-  minValue?: any;
-  maxValue?: any;
-  minLength?: any;
-  maxLength?: any;
+  errors?: Record<string, string>; // Updated type
+  minValue?: Date | string; // Updated type
+  maxValue?: Date | string; // Updated type
+  minLength?: number;
+  maxLength?: number;
   areaClassNames?: string;
   hintText?: string;
   rows?: number;
@@ -43,7 +44,7 @@ export default function Input({
   maxLength
 }: IInput) {
 
-  const hasInputError = typeof errors !== "undefined" && errors !== null && errors[name];
+  const hasInputError = errors && errors[name];
 
   const getInputClasses = () => {
     return `shadow-sm 
@@ -62,6 +63,12 @@ export default function Input({
       `;
   }
 
+  const handleDateChange = (date: Date | null) => {
+    if (inputChange && date) {
+      inputChange(name || '', format(date, 'yyyy-MM-dd'));
+    }
+  }
+
   return (
     <div className={areaClassNames}>
       <label
@@ -77,12 +84,12 @@ export default function Input({
         <textarea
           id={name}
           name={name}
-          value={value}
+          value={value as string}
           disabled={isDisabled}
           required={isRequired}
           className={getInputClasses()}
           placeholder={placeholder}
-          onChange={inputChange && ((e) => inputChange(name, e.target.value))}
+          onChange={inputChange && ((e: ChangeEvent<HTMLTextAreaElement>) => inputChange(name || '', e.target.value))}
           rows={rows}
         ></textarea>
       }
@@ -93,16 +100,16 @@ export default function Input({
           id={name}
           type={type}
           name={name}
-          value={value}
+          value={value as string | number}
           disabled={isDisabled}
           required={isRequired}
           min={minValue && minValue}
           max={maxValue && maxValue}
           className={getInputClasses()}
-          minLength={minLength && minLength}
-          maxLength={maxLength && maxLength}
+          minLength={minLength}
+          maxLength={maxLength}
           placeholder={placeholder}
-          onChange={inputChange && ((e) => inputChange(name, e.target.value))}
+          onChange={inputChange && ((e: ChangeEvent<HTMLInputElement>) => inputChange(name || '', e.target.value))}
         />
       }
 
@@ -112,43 +119,25 @@ export default function Input({
           id={name}
           type={type}
           name={name}
-          value={value}
           disabled={isDisabled}
           required={isRequired}
           className={`w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600`}
           placeholder={placeholder}
           checked={checked}
-          onChange={inputChange && ((e) => inputChange(name, e.target.checked ? 1 : 0))}
+          onChange={inputChange && ((e: ChangeEvent<HTMLInputElement>) => inputChange(name || '', e.target.checked ? 1 : 0))}
         />
       }
 
       {
         type === 'date' &&
-        // <input
-        //   id={name}
-        //   type={type}
-        //   name={name}
-        //   value={value}
-        //   disabled={isDisabled}
-        //   required={isRequired}
-        //   min={minValue && minValue}
-        //   max={maxValue && maxValue}
-        //   className={getInputClasses()}
-        //   minLength={minLength && minLength}
-        //   maxLength={maxLength && maxLength}
-        //   placeholder={placeholder}
-        //   onChange={inputChange && ((e) => inputChange(name, e.target.value))}
-        // />
         <DatePicker
           id={name}
           dateFormat="dd/MM/yyyy"
-          selected={value !== undefined && value !== null && value !== '' ? new Date(value) : new Date()}
-          onChange={(date) => {
-            inputChange(name, format(date, 'yyyy-MM-dd'));
-          }}
+          selected={value ? new Date(value as string) : new Date()}
+          onChange={handleDateChange}
           className={`${getInputClasses()} mt-0`}
-          maxDate={maxValue && new Date(maxValue)}
-          minDate={minValue && new Date(minValue)}
+          maxDate={maxValue ? new Date(maxValue as string) : undefined}
+          minDate={minValue ? new Date(minValue as string) : undefined}
           disabled={isDisabled}
           required={isRequired}
           showMonthDropdown
