@@ -9,8 +9,7 @@ import PageHeader from '@/components/layouts/PageHeader';
 import { PageContent } from '@/components/layouts/PageContent';
 import { changeInputValue, createDepartment, getDepartmentDetails, updateDepartment } from '@/redux/actions/department-action';
 import { useCallback, useEffect } from 'react';
-import { ThunkDispatch } from 'redux';
-import { AnyAction } from 'redux';
+import { AppDispatch } from '@/redux/store'; // Import AppDispatch if you have defined it in store
 
 interface IDepartmentForm {
     id: number;
@@ -19,7 +18,7 @@ interface IDepartmentForm {
 
 export default function DepartmentForm({ id, pageType }: IDepartmentForm) {
     const router = useRouter();
-    const dispatch = useDispatch<ThunkDispatch<RootState, void, AnyAction>>();
+    const dispatch = useDispatch<AppDispatch>();
     const { departmentInput, isSubmitting, isLoadingDetails } = useSelector((state: RootState) => state.department);
 
     const handleChangeTextInput = (name: string, value: any, e: React.ChangeEvent<HTMLInputElement>) => {
