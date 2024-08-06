@@ -10,11 +10,11 @@ import NewButton from '@/components/button/button-new';
 import ActionButtons from '@/components/button/button-actions';
 import NoTableDataFound from '@/components/table/NoDataFound';
 import { RootState, AppDispatch } from '@/redux/store';
-import { PageContentList } from '@/components/layouts/PageContentList';
 import { deleteDepartment, emptyDepartmentInputAction, getDepartmentListAction } from '@/redux/actions/department-action';
 import { IDepartmentView } from '@/redux/interfaces';
 import { hasPermission } from '@/utils/permission';
 import PermissionModal from '../permissionModal';
+import { PageContentList } from '../layouts/PageContentList';
 
 export default function DepartmentList() {
     const dispatch = useDispatch<AppDispatch>();
