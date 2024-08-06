@@ -3,7 +3,8 @@ import * as Types from "./../types/global-type";
 
 const initialState: IGlobal = {
     isOpenSidebar: false,
-    sideMenuList: []
+    sideMenuList: [],
+    isLoading:false,
 };
 
 function globalReducer(state = initialState, action: any) {

@@ -209,6 +209,7 @@ export interface IDesignation {
 export interface IGlobal {
     isOpenSidebar: boolean;
     sideMenuList: any[];
+    isLoading:boolean;
 }
 
 export interface IProposalPersonalInformation {
