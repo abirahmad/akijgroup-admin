@@ -8,11 +8,9 @@ import Loading from '@/components/loading';
 import PageHeader from '@/components/layouts/PageHeader';
 import NewButton from '@/components/button/button-new';
 import ActionButtons from '@/components/button/button-actions';
-import StatusBadge from '@/components/badge/StatusBadge';
 import NoTableDataFound from '@/components/table/NoDataFound';
 import { RootState } from '@/redux/store';
 import { PageContentList } from '@/components/layouts/PageContentList';
-import { deleteEmployee, emptyEmployeeInputAction } from '@/redux/actions/employee-action';
 import { IDepartmentView, IEmployeeView } from '@/redux/interfaces';
 import { hasPermission } from '@/utils/permission';
 import PermissionModal from '../permissionModal';
@@ -34,14 +32,13 @@ export default function DepartmentList() {
         { title: 'Code', id: 3 },
         { title: "Action", id: 4 },
     ];
-
     const debouncedDispatch = useCallback(
         debounce(() => {
-            dispatch(getDepartmentListAction({ currentPage, dataLimit, searchText }));
+            dispatch(getDepartmentListAction(currentPage, dataLimit, searchText, isAgent))
         }, 500),
-        [currentPage, dataLimit, searchText, dispatch]
+        [currentPage, dataLimit, searchText]
     );
-    
+
     useEffect(() => {
         debouncedDispatch();
         return debouncedDispatch.cancel;
