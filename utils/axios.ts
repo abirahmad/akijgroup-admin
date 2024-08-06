@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Toaster } from "@/components/toaster";
 import { getAuthToken, logout } from './auth';
 
-axios.defaults.baseURL = 'https://test.akijgroup.co/api/v1';
+axios.defaults.baseURL = 'http://admin-api.test/api/v1';
 // axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
 axios.interceptors.request.use((value) => {
