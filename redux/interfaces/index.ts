@@ -169,7 +169,7 @@ export interface IEmployeeReducer {
     employeeInput: IEmployee
 }
 
-export interface IDepartmentReducer {
+export interface IMessageReducer {
     isLoading: boolean;
     isDeleting: boolean;
     isLoadingDetails: boolean;
@@ -178,9 +178,19 @@ export interface IDepartmentReducer {
     messagePaginationData: any[];
     messageDetails: any;
     messageInput: any;
-    messageDropdownList: Array<ISelect2Item>
 }
 
+export interface IDepartmentReducer {
+    isLoading: boolean;
+    isDeleting: boolean;
+    isLoadingDetails: boolean;
+    isSubmitting: boolean;
+    departmentList: any[];
+    departmentPaginationData: any[];
+    departmentDetails: any;
+    departmentInput: any;
+    departmentDropdownList: Array<ISelect2Item>
+}
 export interface IReportReducer {
     isLoading: boolean;
     isDeleting: boolean;

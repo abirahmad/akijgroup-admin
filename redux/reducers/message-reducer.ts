@@ -1,8 +1,7 @@
-import { generateDropdownList } from "@/utils/dropdown";
-import { IDepartmentReducer } from "@/redux/interfaces";
+import { IMessageReducer } from "@/redux/interfaces";
 import * as Types from "@/redux/types/message-type";
 
-const initialState: IDepartmentReducer = {
+const initialState: IMessageReducer = {
     isLoading: false,
     isDeleting: false,
     isLoadingDetails: false,
