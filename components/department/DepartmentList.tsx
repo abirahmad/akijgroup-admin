@@ -15,7 +15,7 @@ import { PageContentList } from '@/components/layouts/PageContentList';
 import { IDepartmentView, IMessageView } from '@/redux/interfaces';
 import { hasPermission } from '@/utils/permission';
 import PermissionModal from '../permissionModal';
-import { emptyDepartmentInputAction, getDepartmentListAction } from '@/redux/actions/department-action';
+import { deleteDepartment, emptyDepartmentInputAction, getDepartmentListAction } from '@/redux/actions/department-action';
 
 export default function DepartmentList() {
     const dispatch = useDispatch<AppDispatch>();
@@ -30,9 +30,8 @@ export default function DepartmentList() {
     const columnData = [
         { title: "SL", id: 1 },
         { title: 'Name', id: 2 },
-        { title: 'Designation', id: 3 },
-        { title: 'Message', id: 4 },
-        { title: "Action", id: 5 },
+        { title: 'Code', id: 3 },
+        { title: 'Action', id: 4 },
     ];
 
     const debouncedDispatch = useCallback(
@@ -113,10 +112,7 @@ export default function DepartmentList() {
                                         {message.name}
                                     </td>
                                     <td className="px-2 py-3 font-normal text-gray-900 break-words">
-                                        {message.designation}
-                                    </td>
-                                    <td className="px-2 py-3 font-normal text-gray-900 break-words">
-                                        {message.message}
+                                        {message.code}
                                     </td>
                                     <td className="px-2 py-3 flex gap-1">
                                         <ActionButtons items={getActionButtons(message)} />
@@ -138,7 +134,7 @@ export default function DepartmentList() {
                 handleClose={() => setShowDeleteModal(false)}
                 handleAction={() => {
                     if (messageID) {
-                        dispatch(deleteMessage(messageID, () => setShowDeleteModal(false)));
+                        dispatch(deleteDepartment(messageID, () => setShowDeleteModal(false)));
                     }
                 }}
             />
