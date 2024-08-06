@@ -262,7 +262,7 @@ export default function EmployeeForm({ id, pageType, isAgent = false }: IEmploye
                         <Button
                             title='Save'
                             loadingTitle="Saving..."
-                            onClick={(e) => onSubmit(e)}
+                            onClick={(e:any) => onSubmit(e)}
                             loading={isSubmitting}
                         />
                     </form>

@@ -118,7 +118,7 @@ export default function DepartmentForm({ id, pageType }: IDepartmentForm) {
                         <Button
                             title='Save'
                             loadingTitle="Saving..."
-                            onClick={(e) => onSubmit(e as any)} // Type casting to any if needed
+                            onClick={(e:any) => onSubmit(e as any)} // Type casting to any if needed
                             loading={isSubmitting}
                         />
                     </form>
