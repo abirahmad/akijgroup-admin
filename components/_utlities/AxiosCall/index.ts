@@ -1,5 +1,5 @@
 import { getAuthData } from "@/redux/actions/auth-action";
-import Axios from "axios";
+import Axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 interface IAxiosCall {
     method?: string;
@@ -7,7 +7,7 @@ interface IAxiosCall {
     data?: any;
 }
 
-const BASE_URL = 'http://admin-api.test/api/v1';
+const BASE_URL = process.env.BASE_URL;
 
 const API = Axios.create({
     baseURL: BASE_URL,
@@ -19,17 +19,24 @@ const API = Axios.create({
 // Get Auth Data
 const authData = getAuthData();
 
-const AxiosCall = ({ method = 'get', url, data = null }: IAxiosCall) => {
-    const headers = authData ? { ...API.defaults.headers, Authorization: `Bearer ${authData.accessToken}` } : API.defaults.headers;
+const AxiosCall = async ({ method = 'get', url, data = null }: IAxiosCall): Promise<any> => {
+    // Create the request configuration
+    const config: AxiosRequestConfig = {
+        method,
+        url,
+        data,
+        headers: authData 
+            ? { ...API.defaults.headers.common, Authorization: `Bearer ${authData.accessToken}` } 
+            : API.defaults.headers.common,
+    };
 
-    return API({method, url, data, headers})
-        .then(response => {
-            return response.data;
-        })
-        .catch(error => {
-            console.error(error);
-            throw error;
-        });
+    try {
+        const response: AxiosResponse = await API(config);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
 };
 
 export default AxiosCall;
