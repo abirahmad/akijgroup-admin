@@ -42,7 +42,7 @@ function Sidebar() {
                     <div className="flex-1 px-3 bg-white divide-y space-y-1">
                         <ul className="space-y-2 pb-2 bg-blue-200">
                             {
-                                sideMenuList && sideMenuList.length > 0 && sideMenuList.map((menu, menuIndex) => (
+                                sideMenuList && sideMenuList.length > 0 && sideMenuList.map((menu:any, menuIndex:any) => (
                                     <SubMenuUI menu={menu} key={menuIndex + 1} />
                                 ))
                             }
