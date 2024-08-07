@@ -1,18 +1,17 @@
 import { memo, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
-import { Dispatch } from "@reduxjs/toolkit";
+import { AppDispatch, RootState } from "@/redux/store";
 import Link from "next/link";
 
 import { getSidebarMenuList } from "@/redux/actions/global-action";
-import { RootState } from "@/redux/store";
 import { debounce } from "lodash";
 
 function Sidebar() {
-    const dispatch: Dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const { isOpenSidebar, sideMenuList } = useSelector((state: RootState) => state.global);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-console.log('sideMenuList', sideMenuList)
+
     useEffect(() => {
         const handleResize = () => {
             setWindowWidth(window.innerWidth);
@@ -25,7 +24,7 @@ console.log('sideMenuList', sideMenuList)
         debounce(() => {
             dispatch(getSidebarMenuList());
         }, 500),
-        []
+        [dispatch]
     );
 
     useEffect(() => {
@@ -36,7 +35,6 @@ console.log('sideMenuList', sideMenuList)
         }
     }, [debouncedDispatch, sideMenuList]);
 
-
     return (
         <aside id="sidebar" className={`fixed z-20 h-full top-0 left-0 pt-16 lg:flex flex-shrink-0 flex-col transition-width ease-in-out duration-300 ${isOpenSidebar || windowWidth > 1023 ? "w-64" : "w-0"}`} aria-label="Sidebar">
             <div className="relative flex-1 flex flex-col h-full min-h-0 border-r border-gray-200 bg-white pt-0">
@@ -44,7 +42,7 @@ console.log('sideMenuList', sideMenuList)
                     <div className="flex-1 px-3 bg-white divide-y space-y-1">
                         <ul className="space-y-2 pb-2 bg-blue-200">
                             {
-                                sideMenuList && sideMenuList.length > 0 && sideMenuList.map((menu, menuIndex) => (
+                                sideMenuList && sideMenuList.length > 0 && sideMenuList.map((menu:any, menuIndex:any) => (
                                     <SubMenuUI menu={menu} key={menuIndex + 1} />
                                 ))
                             }
@@ -53,23 +51,25 @@ console.log('sideMenuList', sideMenuList)
                 </div>
             </div>
         </aside>
-    )
+    );
 }
-
-const SubMenuUI = ({ menu }) => {
+interface ISubMenuUI{
+    menu: any;
+}
+const SubMenuUI = ({ menu }:ISubMenuUI) => {
     const router = useRouter();
     const [toggleSubMenu, setToggleSubMenu] = useState(false);
     const { sideMenuList } = useSelector((state: RootState) => state.global);
-    const [menuID, setMenuID] = useState(sideMenuList[0].id);
+    const [menuID, setMenuID] = useState(sideMenuList[0]?.id);
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
-    const handleToggle = (key) => {
+    const handleToggle = (key:any) => {
         setToggleSubMenu(!toggleSubMenu);
         setMenuID(key.id);
         setIsMenuOpen(!isMenuOpen);
     }
 
-    const getAllUrlsByMenu = (menu) => {
+    const getAllUrlsByMenu = (menu:any) => {
         let urls = [];
 
         // Get the URL of the main menu item, if there is one
@@ -107,7 +107,7 @@ const SubMenuUI = ({ menu }) => {
             {
                 <ul className={`text-base text-gray-900 font-normal rounded-lg p-2 group w-full ml-2 ${isMenuOpen ? 'block' : 'hidden'}`}>
                     {
-                        menu.submenu.map((subMenu, subMenuIndex) => (
+                        menu.submenu.map((subMenu:any, subMenuIndex:any) => (
                             <div key={subMenuIndex}>
                                 {
                                     subMenu.submenu.length === 0 ?
@@ -125,17 +125,19 @@ const SubMenuUI = ({ menu }) => {
                 </ul>
             }
         </li>
-    )
+    );
 }
-
-const SubSubMenuUI = ({ subMenu }) => {
-    const [isToggleSubSubMenu, setIsToggleSubSubMenu] = useState(false)
+interface ISubMenu{
+    subMenu: any;
+}
+const SubSubMenuUI = ({ subMenu }:ISubMenu) => {
+    const [isToggleSubSubMenu, setIsToggleSubSubMenu] = useState(false);
     return (
         <li className="w-full">
             <span className="block transition hover:bg-gray-100 text-gray-900 font-normal text-sm p-2 rounded flex-1" onClick={() => setIsToggleSubSubMenu(!isToggleSubSubMenu)}>{subMenu.title}</span>
-            <ul className={isToggleSubSubMenu ? 'block' : 'hidden'} >
+            <ul className={isToggleSubSubMenu ? 'block' : 'hidden'}>
                 {
-                    subMenu.submenu.map((subSubMenu, subSubMenuIndex) => (
+                    subMenu.submenu.map((subSubMenu:any, subSubMenuIndex:any) => (
                         <li className="w-full" key={subSubMenuIndex + 1}>
                             <Link href={subSubMenu.url} className="ml-3 block transition hover:bg-gray-100 text-gray-900 font-normal text-sm p-2 rounded flex-1">
                                 <span>{subSubMenu.title}</span>
@@ -145,7 +147,7 @@ const SubSubMenuUI = ({ subMenu }) => {
                 }
             </ul>
         </li>
-    )
+    );
 }
 
 export default memo(Sidebar);
