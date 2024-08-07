@@ -5,11 +5,11 @@ import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 
 import { handleSidebar } from "@/redux/actions/global-action";
-import { RootState } from "@/redux/store";
+import { RootState, AppDispatch } from "@/redux/store"; // Import AppDispatch
 import { getAuthData, logout } from "@/utils/auth";
 
 export default function Navbar() {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>(); // Use typed useDispatch
     const router = useRouter();
     const { isOpenSidebar } = useSelector((state: RootState) => state.global);
     const userData = getAuthData();
