@@ -85,7 +85,7 @@ export const getDepartmentListAction = (currentPage: number = 1, dataLimit: numb
 
 }
 
-export const getDepartmentDetails = (id: number | string) => (dispatch: Dispatch) => {
+export const getDepartmentDetails = (id: number) => (dispatch: Dispatch) => {
     if (isNaN(id)) {
         return;
     }
