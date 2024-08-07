@@ -2,8 +2,10 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { useEffect, useState } from "react";
-
-export default function MasterLayout({ children }) {
+interface IMaster {
+    children: any;
+}
+export default function MasterLayout({ children }:IMaster) {
     const [initialRenderComplete, setInitialRenderComplete] = useState(false);
 
     useEffect(() => {
