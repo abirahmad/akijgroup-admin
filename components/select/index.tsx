@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactSelect from 'react-select';
+import ReactSelect, { Props as ReactSelectProps, OnChangeValue } from 'react-select';
 import styled from 'styled-components';
 import ValidationMessage from '../validationMessage';
 
@@ -7,6 +7,12 @@ import ValidationMessage from '../validationMessage';
 interface OptionProps {
   isSelected?: boolean;
   isFocused?: boolean;
+}
+
+// Define the interface for each option
+interface OptionType {
+  value: any;
+  label: string;
 }
 
 // Define the interface for the Select component props
@@ -22,10 +28,10 @@ interface ISelect {
   isDisabled?: boolean;
   isLoading?: boolean;
   isMulti?: boolean;
-  options: any[];
+  options: OptionType[];
   defaultValue?: any;
-  errors?: any;
-  handleChangeValue?: void | any;
+  errors?: { [key: string]: string };
+  handleChangeValue?: (name: string, value: any) => void;
 }
 
 const Option = styled.div<OptionProps>`
@@ -79,28 +85,23 @@ export default function Select({
 
     const defaultValueString = defaultValue.toString();
 
-    if (defaultValue) {
-      const foundValue = options.find(option => option.value.toString() === defaultValueString);
-
-      if (foundValue) {
-        return foundValue;
-      }
-    }
-
-    return defaultValue;
+    // Find the default value from options
+    const foundValue = options.find(option => option.value.toString() === defaultValueString);
+    return foundValue || defaultValue;
   };
 
   return (
-    <div className="">
+    <div>
       <label
         htmlFor={name}
         className="text-sm font-medium text-gray-900 block mb-2"
       >
         {label}
-        {isRequired ?
-          <span className="text-red-600 text-base"> * </span> :
+        {isRequired ? (
+          <span className="text-red-600 text-base"> * </span>
+        ) : (
           <span className="text-red-600 text-base"> &nbsp; </span>
-        }
+        )}
       </label>
 
       <div className="my-2">
@@ -117,10 +118,10 @@ export default function Select({
           value={getDefaultValue()}
           onChange={
             handleChangeValue &&
-            ((option) =>
+            ((option: OptionType | OptionType[] | null) =>
               isMulti
-                ? handleChangeValue(name, option)
-                : handleChangeValue(name, option?.value ?? ''))
+                ? handleChangeValue(name ?? '', option)
+                : handleChangeValue(name ?? '', (option as OptionType)?.value ?? ''))
           }
           options={options}
           placeholder={placeholder}
@@ -135,8 +136,8 @@ export default function Select({
         />
       </div>
 
-      {errors && errors[name] && (
-        <ValidationMessage message={errors[name]} />
+      {errors && errors[name ?? ''] && (
+        <ValidationMessage message={errors[name ?? '']} />
       )}
     </div>
   );
