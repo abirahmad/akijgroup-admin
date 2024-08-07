@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import { useRouter } from 'next/router';
 
 import Table from '@/components/table';
@@ -15,15 +15,16 @@ import { hasPermission } from '@/utils/permission';
 import PermissionModal from '../permissionModal';
 import { deleteNewsMedia, emptyNewsMediaInputAction, getNewsMediaListAction } from '@/redux/actions/newsmedia-action';
 
-export default function NewsmediaList() {
-    const dispatch = useDispatch();
+const NewsmediaList = () => {
+    const dispatch = useDispatch<AppDispatch>();
     const router = useRouter();
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
     const [messageID, setMessageID] = useState<number | null>(null);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [dataLimit, setDataLimit] = useState<number>(10);
-    const { NewsmediaList, newsmediaPaginationData, isLoading, isDeleting } = useSelector((state: RootState) => state.newsmedia);
     const [searchText, setSearchText] = useState<string>('');
+
+    const { NewsmediaList, newsmediaPaginationData, isLoading, isDeleting } = useSelector((state: RootState) => state.newsmedia);
 
     const columnData = [
         { title: "SL", id: 1 },
@@ -42,7 +43,10 @@ export default function NewsmediaList() {
 
     useEffect(() => {
         debouncedDispatch();
-        return debouncedDispatch.cancel;
+        // Clean up debounce on unmount
+        return () => {
+            debouncedDispatch.cancel();
+        };
     }, [debouncedDispatch]);
 
     const handleDeleteDepartmentModal = (id: number) => {
@@ -143,3 +147,5 @@ export default function NewsmediaList() {
         </div>
     );
 }
+
+export default NewsmediaList;
