@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { RootState } from '@/redux/store';
 import Loading from '@/components/loading';
 import Button from '@/components/button';
@@ -7,9 +8,8 @@ import { debounce } from 'lodash';
 import Input from '@/components/input';
 import PageHeader from '@/components/layouts/PageHeader';
 import { PageContent } from '@/components/layouts/PageContent';
-import { changeInputValue, createNewsMedia, getNewsMediaDetails, updateNewsMedia } from '@/redux/actions/newsmedia-action';
-import { useCallback, useEffect } from 'react';
-import { AppDispatch } from '@/redux/store'; // Import AppDispatch if you have defined it in store
+import { useCallback, useEffect, useState } from 'react';
+import { createNewsMedia, getNewsMediaDetails, updateNewsMedia, changeInputValue } from '@/redux/actions/newsmedia-action';
 import TextEditor from '../textEditor';
 
 interface INewsMediaForm {
@@ -19,10 +19,11 @@ interface INewsMediaForm {
 
 export default function NewsMediaForm({ id, pageType }: INewsMediaForm) {
     const router = useRouter();
-    const dispatch = useDispatch<AppDispatch>();
+    const dispatch = useDispatch();
     const { newsmediaInput, isSubmitting, isLoadingDetails } = useSelector((state: RootState) => state.newsmedia);
+    const [errors, setErrors] = useState({});
 
-    const handleChangeTextInput = (name: string, value: any, e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChangeTextInput = async (name: string, value: any, e: any) => {
         dispatch(changeInputValue(name, value, e));
     };
 
@@ -32,30 +33,30 @@ export default function NewsMediaForm({ id, pageType }: INewsMediaForm) {
                 dispatch(getNewsMediaDetails(id));
             }
         }, 500),
-        [id, dispatch]
+        [id]
     );
 
     useEffect(() => {
         debouncedDispatch();
-        return () => debouncedDispatch.cancel();
+        return debouncedDispatch.cancel;
     }, [debouncedDispatch]);
 
-    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const onSubmit = (e: any) => {
         e.preventDefault();
         const formattedInputObject = {
             ...newsmediaInput,
-        };
+        }
 
         if (pageType === 'create') {
             dispatch(createNewsMedia(formattedInputObject, router));
         } else {
             dispatch(updateNewsMedia(formattedInputObject, router, pageType));
         }
-    };
+    }
 
     const getMainPageTitle = () => {
-        return 'News Media';
-    };
+        return 'News & Media';
+    }
 
     const getPageTitle = () => {
         let title = '';
@@ -68,7 +69,7 @@ export default function NewsMediaForm({ id, pageType }: INewsMediaForm) {
         title += getMainPageTitle();
 
         return title;
-    };
+    }
 
     return (
         <>
@@ -86,32 +87,43 @@ export default function NewsMediaForm({ id, pageType }: INewsMediaForm) {
                     </div>
                 }
 
-                {isLoadingDetails === false && newsmediaInput && (
+                {isLoadingDetails === false && typeof newsmediaInput !== "undefined" && newsmediaInput !== null && (
                     <form
                         method="post"
                         autoComplete="off"
                         encType="multipart/form-data"
-                        onSubmit={onSubmit} // Moved onSubmit to the form tag
                     >
                         <div className="grid gap-2 grid-cols-1 md:grid-cols-1">
+
                             <div className='md:ml-4 col-span-4'>
                                 <div className='grid gap-2 grid-cols-1 md:grid-cols-2'>
                                     <Input
-                                        label="Name"
-                                        name="name"
-                                        placeholder='News Name'
-                                        value={newsmediaInput.name}
+                                        label="Title"
+                                        name="title"
+                                        placeholder='Title'
+                                        value={newsmediaInput.title}
                                         isRequired={true}
-                                        inputChange={(e) => handleChangeTextInput}
+                                        inputChange={handleChangeTextInput}
                                     />
                                     <Input
-                                        label="short_description"
+                                        label="Short Description"
                                         name="short_description"
                                         placeholder='Short Description'
                                         value={newsmediaInput.short_description}
                                         isRequired={true}
-                                        inputChange={(e) => handleChangeTextInput}
+                                        inputChange={handleChangeTextInput}
                                     />
+                                </div>
+
+                                <div className='grid gap-2 grid-cols-1 md:grid-cols-2'>
+                                    {/* <Input
+                                        label="Long Description"
+                                        name="long_description"
+                                        placeholder='Logn description'
+                                        value={newsmediaInput.long_description}
+                                        isRequired={true}
+                                        inputChange={handleChangeTextInput}
+                                    /> */}
 
                                     <TextEditor
                                         label="Long Description"
@@ -124,17 +136,19 @@ export default function NewsMediaForm({ id, pageType }: INewsMediaForm) {
                                     />
                                 </div>
                             </div>
+
                         </div>
 
                         <Button
                             title='Save'
                             loadingTitle="Saving..."
-                            onClick={(e: any) => onSubmit(e as any)} // Type casting to any if needed
+                            onClick={(e) => onSubmit(e)}
                             loading={isSubmitting}
                         />
                     </form>
-                )}
+                )
+                }
             </PageContent>
         </>
-    );
+    )
 }

@@ -117,8 +117,8 @@ const NewsmediaList = () => {
                                     <td className="px-2 py-3 font-normal text-gray-900 break-words">
                                         {newmedia.short_description}
                                     </td>
-                                    <td className="px-2 py-3 font-normal text-gray-900 break-words">
-                                        {newmedia.long_description}
+                                    <td className="px-2 py-3 font-normal text-gray-900 break-words"  dangerouslySetInnerHTML={{ __html: newmedia.long_description }}>
+                                        {/* {newmedia.long_description} */}
                                     </td>
                                     <td className="px-2 py-3 flex gap-1">
                                         <ActionButtons items={getActionButtons(newmedia)} />
