@@ -106,9 +106,9 @@ export default function NewsMediaForm({ id, pageType }: INewsMediaForm) {
                                     />
                                     <Input
                                         label="short_description"
-                                        name="code"
-                                        placeholder='Code'
-                                        value={newsmediaInput.code}
+                                        name="short_description"
+                                        placeholder='Short Description'
+                                        value={newsmediaInput.short_description}
                                         isRequired={true}
                                         inputChange={(e) => handleChangeTextInput}
                                     />
