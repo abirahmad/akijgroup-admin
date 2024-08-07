@@ -8,17 +8,15 @@ import Loading from '@/components/loading';
 import PageHeader from '@/components/layouts/PageHeader';
 import NewButton from '@/components/button/button-new';
 import ActionButtons from '@/components/button/button-actions';
-import StatusBadge from '@/components/badge/StatusBadge';
 import NoTableDataFound from '@/components/table/NoDataFound';
 import { RootState, AppDispatch } from '@/redux/store'; // Ensure AppDispatch is defined correctly in your store
 import { PageContentList } from '@/components/layouts/PageContentList';
-import { IDepartmentView, IMessageView, INewsMediaView } from '@/redux/interfaces';
 import { hasPermission } from '@/utils/permission';
 import PermissionModal from '../permissionModal';
 import { deleteNewsMedia, emptyNewsMediaInputAction, getNewsMediaListAction } from '@/redux/actions/newsmedia-action';
 
 export default function newsmediaList() {
-    const dispatch = useDispatch<AppDispatch>();
+    const dispatch = useDispatch();
     const router = useRouter();
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
     const [messageID, setMessageID] = useState<number | null>(null);
@@ -32,7 +30,7 @@ export default function newsmediaList() {
         { title: 'Title', id: 2 },
         { title: 'Short Description', id: 3 },
         { title: 'Long Description', id: 4 },
-        { title: 'Action', id:5 },
+        { title: 'Action', id: 5 },
     ];
 
     const debouncedDispatch = useCallback(
@@ -52,13 +50,13 @@ export default function newsmediaList() {
         setMessageID(id);
     };
 
-    const getActionButtons = (department: IDepartmentView) => {
+    const getActionButtons = (newsmedia: any) => {
         const actions = [];
 
         if (hasPermission('department.edit')) {
             actions.push({
                 element: 'Edit',
-                onClick: () => router.push(`/department/edit?id=${department.id}`),
+                onClick: () => router.push(`/news-media/edit?id=${newsmedia.id}`),
                 iconClass: 'pencil'
             });
         }
@@ -66,7 +64,7 @@ export default function newsmediaList() {
         if (hasPermission('department.delete')) {
             actions.push({
                 element: 'Delete',
-                onClick: () => handleDeleteDepartmentModal(department.id),
+                onClick: () => handleDeleteDepartmentModal(newsmedia.id),
                 iconClass: 'trash'
             });
         }
