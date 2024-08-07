@@ -1,6 +1,15 @@
-import ReactSelect from "react-select";
-import styled from "styled-components";
-import ValidationMessage from "../validationMessage";
+import React from 'react';
+import ReactSelect from 'react-select';
+import styled from 'styled-components';
+import ValidationMessage from '../validationMessage';
+
+// Define the interface for the Option props
+interface OptionProps {
+  isSelected?: boolean;
+  isFocused?: boolean;
+}
+
+// Define the interface for the Select component props
 interface ISelect {
   name?: string;
   value?: any;
@@ -19,7 +28,7 @@ interface ISelect {
   handleChangeValue?: void | any;
 }
 
-const Option = styled.div`
+const Option = styled.div<OptionProps>`
   color: #000;
   font-family: "Open Sans", "Arial", Sans-Serif !important;
   padding: 5px 10px;
@@ -33,13 +42,12 @@ const Option = styled.div`
   color: ${(props) => (props.isSelected || props.isFocused ? "#fff" : "#000")};
 `;
 
-
 const customStyles = {
-  control: (provided, state) => ({
+  control: (provided: any, state: any) => ({
     ...provided,
-    borderColor: state.isFocused ? '#017437' : provided.ColorColor,
+    borderColor: state.isFocused ? '#017437' : provided.borderColor,
     borderWidth: '1px',
-    borderStyle: 'solid', 
+    borderStyle: 'solid',
     transition: 'border-color 0.3s ease-in-out',
     boxShadow: state.isFocused ? '0' : provided.boxShadow,
     '&:hover': {
@@ -72,7 +80,7 @@ export default function Select({
     const defaultValueString = defaultValue.toString();
 
     if (defaultValue) {
-      const foundValue = options.find(option => option.value.toString() == defaultValueString);
+      const foundValue = options.find(option => option.value.toString() === defaultValueString);
 
       if (foundValue) {
         return foundValue;
@@ -80,7 +88,7 @@ export default function Select({
     }
 
     return defaultValue;
-  }
+  };
 
   return (
     <div className="">
@@ -110,7 +118,7 @@ export default function Select({
           onChange={
             handleChangeValue &&
             ((option) =>
-              isMulti === true
+              isMulti
                 ? handleChangeValue(name, option)
                 : handleChangeValue(name, option?.value ?? ''))
           }
@@ -127,11 +135,9 @@ export default function Select({
         />
       </div>
 
-      {
-        typeof errors !== "undefined" && errors !== null && errors[name] && (
-          <ValidationMessage message={errors[name]} />
-        )
-      }
+      {errors && errors[name] && (
+        <ValidationMessage message={errors[name]} />
+      )}
     </div>
   );
 }
