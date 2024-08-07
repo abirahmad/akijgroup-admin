@@ -15,7 +15,7 @@ import { hasPermission } from '@/utils/permission';
 import PermissionModal from '../permissionModal';
 import { deleteNewsMedia, emptyNewsMediaInputAction, getNewsMediaListAction } from '@/redux/actions/newsmedia-action';
 
-export default function newsmediaList() {
+export default function NewsmediaList() {
     const dispatch = useDispatch();
     const router = useRouter();
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
