@@ -43,9 +43,10 @@ export const createDepartment = (departmentInput: any, router: any) => (dispatch
 
     axios.post(`/departments`, departmentInput)
         .then((res) => {
+            console.log('Department', res)
             response.status = true;
             response.isLoading = false;
-            response.message = res.message;
+            // response.message = res.message;
             Toaster('success', response.message);
             router.push('/department');
             dispatch({ type: Types.CREATE_DEPARTMENT, payload: response });
@@ -73,7 +74,7 @@ export const getDepartmentListAction = (currentPage: number = 1, dataLimit: numb
             console.log('res', res)
             response.isLoading = false;
             response.status = true;
-            response.message = res.message;
+            // response.message = res.message;
             response.data = res.data.data;
             response.paginationData = res.data;
             dispatch({ type: Types.GET_DEPARTMENT_LIST, payload: response });
@@ -101,7 +102,7 @@ export const getDepartmentDetails = (id: number | string) => (dispatch: Dispatch
         .then((res) => {
             response.isLoading = false;
             response.status = true;
-            response.message = res.message;
+            // response.message = res.message;
             response.data = res.data;
             dispatch({ type: Types.GET_DEPARTMENT_DETAILS, payload: response });
         })
@@ -160,7 +161,7 @@ export const updateDepartment = (departmentInput: any, router: any, pageType: st
         .then((res) => {
             response.status = true;
             response.isLoading = false;
-            response.message = res.message;
+            // response.message = res.message;
             Toaster('success', response.message);
             router.push('/department');
             dispatch({ type: Types.UPDATE_DEPARTMENT, payload: response });
