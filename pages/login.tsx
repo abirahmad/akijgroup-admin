@@ -6,10 +6,16 @@ import { RootState } from '@/redux/store';
 import Button from '@/components/button';
 import Link from 'next/link';
 import { changeInputValue, changeOtpInputValue, handleLogin, handleOtpLogin } from '@/redux/actions/auth-action';
-import { convertDateTimeToSeconds, formatTime } from "@/utils/remainingTime";
+import { convertDateTimeToSeconds } from "@/utils/remainingTime";
+
+// Type for Dispatch
+import { ThunkDispatch } from 'redux-thunk';
+import { AnyAction } from 'redux';
+
+type AppDispatch = ThunkDispatch<RootState, undefined, AnyAction>;
 
 export default function Login() {
-    const dispatch = useDispatch();
+    const dispatch: AppDispatch = useDispatch();
     const [viewMoreCredential, setViewMoreCredential] = useState<boolean>(false);
     const { loginInput, isSubmitting, otpStatus, otpExpireTime, otpInput } = useSelector((state: RootState) => state.Auth);
     const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -23,11 +29,10 @@ export default function Login() {
         dispatch(changeOtpInputValue(name, value));
     };
 
-    const onSubmit = (e: any) => {
+    const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         dispatch(handleLogin(loginInput));
-
-    }
+    };
 
     useEffect(() => {
         if (otpExpireTime) {
@@ -36,13 +41,12 @@ export default function Login() {
         }
     }, [otpExpireTime]);
 
-
     useEffect(() => {
         let timer: NodeJS.Timeout;
 
         if (remainingTime > 0) {
             timer = setInterval(() => {
-                setRemainingTime((prevTime: any) => prevTime - 1);
+                setRemainingTime((prevTime) => prevTime - 1);
             }, 1000);
         }
 
@@ -51,11 +55,10 @@ export default function Login() {
         };
     }, [remainingTime]);
 
-
     const onOtpSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         dispatch(handleOtpLogin(loginInput, otpInput));
-    }
+    };
 
     return (
         <section className="md:h-screen py-4 px-6 md:px-10 bg-white text-gray-900 flex items-center justify-center border-b border-gray-200 lg:mt-1.5">
@@ -123,7 +126,7 @@ export default function Login() {
                         <div className="text-center lg:text-left">
                             <Button
                                 title="Login"
-                                onClick={(e: React.FormEvent) => onSubmit(e)}
+                                onClick={onSubmit}
                                 position="text-left"
                                 loadingTitle="Logging"
                                 loading={isSubmitting}
@@ -145,6 +148,5 @@ export default function Login() {
                 </form>
             </div>
         </section>
-
     )
 }
