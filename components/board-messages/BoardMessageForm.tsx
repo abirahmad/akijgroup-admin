@@ -20,8 +20,9 @@ export default function BoardMessageForm({ id, pageType }: IBoardMessageForm) {
     const dispatch = useDispatch<AppDispatch>();
     const { messageInput, isSubmitting, isLoadingDetails } = useSelector((state: RootState) => state.message);
 
-    const handleChangeTextInput = (name: string, value: any, e: any) => {
-        dispatch(changeInputValue(name, value, e));
+    // Adjusted handleChangeTextInput function with two arguments
+    const handleChangeTextInput = (name: string, value: string | number | boolean) => {
+        dispatch(changeInputValue(name, value));
     };
 
     const debouncedDispatch = useCallback(

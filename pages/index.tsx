@@ -13,9 +13,9 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [dataLimit, setDataLimit] = useState<number>(20);
   const { employeeList, isLoading,employeeChart } = useSelector((state: RootState) => state.employee);
-  useEffect(() => {
-    dispatch(getEmployeeChartAction())
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getEmployeeChartAction())
+  // }, []);
 
   // const [data, setData] = useState(null);
 
