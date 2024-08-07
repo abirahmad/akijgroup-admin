@@ -42,7 +42,7 @@ function Sidebar() {
                     <div className="flex-1 px-3 bg-white divide-y space-y-1">
                         <ul className="space-y-2 pb-2 bg-blue-200">
                             {
-                                sideMenuList && sideMenuList.length > 0 && sideMenuList.map((menu:any, menuIndex:any) => (
+                                sideMenuList && sideMenuList.length > 0 && sideMenuList.map((menu, menuIndex) => (
                                     <SubMenuUI menu={menu} key={menuIndex + 1} />
                                 ))
                             }
@@ -117,12 +117,21 @@ const SubMenuUI = ({ menu }: { menu: Menu }) => {
                             <div key={subMenuIndex}>
                                 {
                                     subMenu.submenu.length === 0 ?
-                                        <li className="w-full" key={subMenuIndex + 1}>
-                                            <Link href={subMenu.url} className="block transition hover:bg-gray-100 text-gray-900 font-normal text-sm p-2 rounded flex-1 ">
-                                                <i className={subMenu.icon}></i> &nbsp;&nbsp;
-                                                <span>{subMenu.title}</span>
-                                            </Link>
-                                        </li> :
+                                        subMenu.url ? (
+                                            <li className="w-full" key={subMenuIndex + 1}>
+                                                <Link href={subMenu.url} className="block transition hover:bg-gray-100 text-gray-900 font-normal text-sm p-2 rounded flex-1 ">
+                                                    <i className={subMenu.icon}></i> &nbsp;&nbsp;
+                                                    <span>{subMenu.title}</span>
+                                                </Link>
+                                            </li>
+                                        ) : (
+                                            <li className="w-full" key={subMenuIndex + 1}>
+                                                <span className="block transition hover:bg-gray-100 text-gray-900 font-normal text-sm p-2 rounded flex-1 ">
+                                                    <i className={subMenu.icon}></i> &nbsp;&nbsp;
+                                                    <span>{subMenu.title}</span>
+                                                </span>
+                                            </li>
+                                        ) :
                                         <SubSubMenuUI subMenu={subMenu} key={subMenuIndex + 1} />
                                 }
                             </div>
@@ -143,7 +152,7 @@ const SubSubMenuUI = ({ subMenu }: { subMenu: Menu }) => {
                 {
                     subMenu.submenu.map((subSubMenu, subSubMenuIndex) => (
                         <li className="w-full" key={subSubMenuIndex + 1}>
-                            <Link href={subSubMenu.url} className="ml-3 block transition hover:bg-gray-100 text-gray-900 font-normal text-sm p-2 rounded flex-1">
+                            <Link href={subSubMenu.url || '/'} className="ml-3 block transition hover:bg-gray-100 text-gray-900 font-normal text-sm p-2 rounded flex-1">
                                 <span>{subSubMenu.title}</span>
                             </Link>
                         </li>
