@@ -42,7 +42,7 @@ function Sidebar() {
                     <div className="flex-1 px-3 bg-white divide-y space-y-1">
                         <ul className="space-y-2 pb-2 bg-blue-200">
                             {
-                                sideMenuList && sideMenuList.length > 0 && sideMenuList.map((menu:any, menuIndex:any) => (
+                                sideMenuList && sideMenuList.length > 0 && sideMenuList.map((menu, menuIndex) => (
                                     <SubMenuUI menu={menu} key={menuIndex + 1} />
                                 ))
                             }
@@ -53,24 +53,30 @@ function Sidebar() {
         </aside>
     );
 }
-interface ISubMenuUI{
-    menu: any;
+
+interface Menu {
+    id: string;
+    url?: string;
+    icon: string;
+    title: string;
+    submenu: Menu[];
 }
-const SubMenuUI = ({ menu }:ISubMenuUI) => {
+
+const SubMenuUI = ({ menu }: { menu: Menu }) => {
     const router = useRouter();
     const [toggleSubMenu, setToggleSubMenu] = useState(false);
     const { sideMenuList } = useSelector((state: RootState) => state.global);
     const [menuID, setMenuID] = useState(sideMenuList[0]?.id);
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
-    const handleToggle = (key:any) => {
+    const handleToggle = (key: Menu) => {
         setToggleSubMenu(!toggleSubMenu);
         setMenuID(key.id);
         setIsMenuOpen(!isMenuOpen);
     }
 
-    const getAllUrlsByMenu = (menu:any) => {
-        let urls = [];
+    const getAllUrlsByMenu = (menu: Menu): string[] => {
+        let urls: string[] = [];
 
         // Get the URL of the main menu item, if there is one
         if (menu.url) {
@@ -92,7 +98,7 @@ const SubMenuUI = ({ menu }:ISubMenuUI) => {
         if (subMenuUrls.includes(router.pathname)) {
             setIsMenuOpen(true);
         }
-    }, [router.pathname]);
+    }, [router.pathname, menu]);
 
     return (
         <li>
@@ -107,7 +113,7 @@ const SubMenuUI = ({ menu }:ISubMenuUI) => {
             {
                 <ul className={`text-base text-gray-900 font-normal rounded-lg p-2 group w-full ml-2 ${isMenuOpen ? 'block' : 'hidden'}`}>
                     {
-                        menu.submenu.map((subMenu:any, subMenuIndex:any) => (
+                        menu.submenu.map((subMenu, subMenuIndex) => (
                             <div key={subMenuIndex}>
                                 {
                                     subMenu.submenu.length === 0 ?
@@ -120,24 +126,22 @@ const SubMenuUI = ({ menu }:ISubMenuUI) => {
                                         <SubSubMenuUI subMenu={subMenu} key={subMenuIndex + 1} />
                                 }
                             </div>
-                        )
-                        )}
+                        ))
+                    }
                 </ul>
             }
         </li>
     );
 }
-interface ISubMenu{
-    subMenu: any;
-}
-const SubSubMenuUI = ({ subMenu }:ISubMenu) => {
+
+const SubSubMenuUI = ({ subMenu }: { subMenu: Menu }) => {
     const [isToggleSubSubMenu, setIsToggleSubSubMenu] = useState(false);
     return (
         <li className="w-full">
             <span className="block transition hover:bg-gray-100 text-gray-900 font-normal text-sm p-2 rounded flex-1" onClick={() => setIsToggleSubSubMenu(!isToggleSubSubMenu)}>{subMenu.title}</span>
             <ul className={isToggleSubSubMenu ? 'block' : 'hidden'}>
                 {
-                    subMenu.submenu.map((subSubMenu:any, subSubMenuIndex:any) => (
+                    subMenu.submenu.map((subSubMenu, subSubMenuIndex) => (
                         <li className="w-full" key={subSubMenuIndex + 1}>
                             <Link href={subSubMenu.url} className="ml-3 block transition hover:bg-gray-100 text-gray-900 font-normal text-sm p-2 rounded flex-1">
                                 <span>{subSubMenu.title}</span>
