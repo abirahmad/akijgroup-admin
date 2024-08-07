@@ -101,7 +101,7 @@ export default function DepartmentForm({ id, pageType }: IDepartmentForm) {
                                         placeholder='Department Name'
                                         value={departmentInput.name}
                                         isRequired={true}
-                                        inputChange={handleChangeTextInput}
+                                        inputChange={(e)=>handleChangeTextInput}
                                     />
                                     <Input
                                         label="Code"
@@ -109,7 +109,7 @@ export default function DepartmentForm({ id, pageType }: IDepartmentForm) {
                                         placeholder='Code'
                                         value={departmentInput.code}
                                         isRequired={true}
-                                        inputChange={handleChangeTextInput}
+                                        inputChange={(e)=>handleChangeTextInput}
                                     />
                                 </div>
                             </div>
