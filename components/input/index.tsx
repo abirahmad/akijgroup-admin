@@ -62,13 +62,19 @@ export default function Input({
       ${isDisabled ? 'bg-gray-100' : 'bg-gray-50'}
       `;
   }
-
+  const formatDateToString = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
   const handleDateChange = (date: Date | null) => {
     if (inputChange && date) {
       inputChange(name || '', format(date, 'yyyy-MM-dd'));
     }
   }
-
+  const formattedMinValue = minValue instanceof Date ? formatDateToString(minValue) : minValue;
+  const formattedMaxValue = maxValue instanceof Date ? formatDateToString(maxValue) : maxValue;
   return (
     <div className={areaClassNames}>
       <label
@@ -103,13 +109,13 @@ export default function Input({
           value={value as string | number}
           disabled={isDisabled}
           required={isRequired}
-          min={minValue && minValue}
-          max={maxValue && maxValue}
+          min={formattedMinValue}
+          max={formattedMaxValue}
           className={getInputClasses()}
           minLength={minLength}
           maxLength={maxLength}
           placeholder={placeholder}
-          onChange={inputChange && ((e: ChangeEvent<HTMLInputElement>) => inputChange(name || '', e.target.value))}
+          onChange={inputChange && ((e: ChangeEvent<HTMLInputElement>) => inputChange(name, e.target.value))}
         />
       }
 
