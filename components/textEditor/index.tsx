@@ -61,7 +61,7 @@ const TextEditor = ({
         `;
     };
 
-    const handleQuillChange = (content) => {
+    const handleQuillChange = (content:any) => {
         if (inputChange) {
             inputChange(name, content);
         }
@@ -90,7 +90,7 @@ const TextEditor = ({
                     ],
                 }}
                 formats={['bold', 'italic', 'underline', 'list', 'bullet']}
-                styles={{
+                style={{
                     height: '400px', // Set minimum height
                 }}
                 onChange={handleQuillChange}
