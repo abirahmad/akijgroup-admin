@@ -191,6 +191,17 @@ export interface IDepartmentReducer {
     departmentInput: any;
     departmentDropdownList: Array<ISelect2Item>
 }
+
+export interface INewsMediaReducer {
+    isLoading: boolean;
+    isDeleting: boolean;
+    isLoadingDetails: boolean;
+    isSubmitting: boolean;
+    newsmediaList: any[];
+    newsmediaPaginationData: any[];
+    newsmediaDetails: any;
+    newsmediaInput: any;
+}
 export interface IReportReducer {
     isLoading: boolean;
     isDeleting: boolean;

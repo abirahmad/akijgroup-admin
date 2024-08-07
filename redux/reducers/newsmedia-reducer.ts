@@ -1,8 +1,8 @@
-import { generateDropdownList } from "@/utils/dropdown";
-import { IDepartmentReducer } from "@/redux/interfaces";
+
+import { INewsMediaReducer } from "@/redux/interfaces";
 import * as Types from "@/redux/types/newsmedia-type";
 
-const initialState: IDepartmentReducer = {
+const initialState: INewsMediaReducer = {
     isLoading: false,
     isDeleting: false,
     isLoadingDetails: false,
