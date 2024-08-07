@@ -2,6 +2,11 @@ import axios from "@/utils/axios";
 import * as Types from "../types/department-type";
 import { Toaster } from "@/components/toaster";
 import { Dispatch } from "@reduxjs/toolkit";
+import { ThunkDispatch } from 'redux-thunk';
+import { RootState } from "../store";
+import { AnyAction } from 'redux';
+
+type AppThunkDispatch = ThunkDispatch<RootState, undefined, AnyAction>;
 
 export const changeInputValue = (name: string, value: any, e: any) => (dispatch: Dispatch) => {
     let data = {
@@ -10,12 +15,12 @@ export const changeInputValue = (name: string, value: any, e: any) => (dispatch:
     }
     dispatch({ type: Types.CHANGE_INPUT_VALUE, payload: data });
 };
-			
+
 export const emptyDepartmentInputAction = () => (dispatch: Dispatch) => {
     dispatch({ type: Types.EMPTY_DEPARTMENT_INPUT, payload: {} });
 };
 
-export const validateDepartmentForm = (departmentInput) => {
+export const validateDepartmentForm = (departmentInput: any) => {
     if (departmentInput.name === "") {
         Toaster("error", "Please give department name.");
         return false;
@@ -24,7 +29,7 @@ export const validateDepartmentForm = (departmentInput) => {
     return true;
 }
 
-export const createDepartment = (departmentInput, router) => (dispatch: Dispatch) => {
+export const createDepartment = (departmentInput: any, router: any) => (dispatch: Dispatch) => {
     if (!validateDepartmentForm(departmentInput)) {
         return;
     }
@@ -61,7 +66,7 @@ export const getDepartmentListAction = (currentPage: number = 1, dataLimit: numb
     };
     dispatch({ type: Types.GET_DEPARTMENT_LIST, payload: response });
 
-    const resourceUrl ='departments';
+    const resourceUrl = 'departments';
 
     axios.get(`/${resourceUrl}?perPage=${dataLimit}&page=${currentPage}&search=${searchText}`)
         .then((res) => {
@@ -107,19 +112,24 @@ export const getDepartmentDetails = (id: number | string) => (dispatch: Dispatch
 }
 
 
-export const deleteDepartment = (id: number | string, setShowDeleteModal: any, isAgent: boolean = false) => (dispatch: Dispatch) => {
+export const deleteDepartment = (
+    id: number | string,
+    setShowDeleteModal: (show: boolean) => void,
+    isAgent: boolean = false
+) => (dispatch: AppThunkDispatch) => {
     let responseData = {
         status: false,
         message: "",
         isLoading: true,
     };
+
     dispatch({ type: Types.DELETE_DEPARTMENT, payload: responseData });
 
     axios.delete(`/departments/${id}`)
         .then((res) => {
             responseData.isLoading = false;
             responseData.status = true;
-            responseData.message = res.message;
+            responseData.message = res.data.message; // Use `res.data.message` if the message is inside `data`
             Toaster('success', responseData.message);
             setShowDeleteModal(false);
             dispatch(getDepartmentListAction(1, 10, ""));
@@ -127,12 +137,13 @@ export const deleteDepartment = (id: number | string, setShowDeleteModal: any, i
         })
         .catch((error) => {
             responseData.isLoading = false;
+            responseData.message = error.message || "An error occurred"; // Optionally handle error message
             dispatch({ type: Types.DELETE_DEPARTMENT, payload: responseData });
         });
-}
+};
 
 
-export const updateDepartment = (departmentInput:any, router: any, pageType: string = 'edit') => (dispatch: Dispatch) => {
+export const updateDepartment = (departmentInput: any, router: any, pageType: string = 'edit') => (dispatch: Dispatch) => {
     if (!validateDepartmentForm(departmentInput)) {
         return;
     }
