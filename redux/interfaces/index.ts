@@ -90,6 +90,11 @@ export interface IMessage {
     message: string;
 }
 
+export interface INewsMedia {
+    title: string;
+    short_description: string;
+    long_description: string;
+}
 export interface IEmployeeView extends IEmployee {
     id: number;
     code: string;
@@ -109,6 +114,13 @@ export interface IMessageView extends IMessage {
     id: number;
     name: string;
     code: string;
+}
+
+export interface INewsMediaView extends IMessage {
+    id: number;
+    title: string;
+    short_description: string;
+    long_description: string;
 }
 
 export interface ISellerReportView extends IEmployee {
