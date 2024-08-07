@@ -116,7 +116,7 @@ export interface IMessageView extends IMessage {
     code: string;
 }
 
-export interface INewsMediaView extends IMessage {
+export interface INewsMediaView extends INewsMedia {
     id: number;
     title: string;
     short_description: string;
@@ -209,7 +209,7 @@ export interface INewsMediaReducer {
     isDeleting: boolean;
     isLoadingDetails: boolean;
     isSubmitting: boolean;
-    newsmediaList: any[];
+    NewsmediaList: any[];
     newsmediaPaginationData: any[];
     newsmediaDetails: any;
     newsmediaInput: any;

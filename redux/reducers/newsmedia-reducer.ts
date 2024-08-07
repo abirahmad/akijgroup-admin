@@ -7,7 +7,7 @@ const initialState: INewsMediaReducer = {
     isDeleting: false,
     isLoadingDetails: false,
     isSubmitting: false,
-    newsmediaList: [],
+    NewsmediaList: [],
     newsmediaPaginationData: [],
     newsmediaDetails: {},
     newsmediaInput: {
@@ -66,7 +66,7 @@ function newsmediaReducer(state = initialState, action: any) {
             return {
                 ...state,
                 isLoading: action.payload.isLoading,
-                newsmediaList: action.payload.data,
+                NewsmediaList: action.payload.data,
                 newsmediaPaginationData: action.payload.paginationData,
             };
 

@@ -22,7 +22,7 @@ export default function newsmediaList() {
     const [messageID, setMessageID] = useState<number | null>(null);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [dataLimit, setDataLimit] = useState<number>(10);
-    const { newsmediaList, newsmediaPaginationData, isLoading, isDeleting } = useSelector((state: RootState) => state.newsmedia);
+    const { NewsmediaList, newsmediaPaginationData, isLoading, isDeleting } = useSelector((state: RootState) => state.newsmedia);
     const [searchText, setSearchText] = useState<string>('');
 
     const columnData = [
@@ -101,8 +101,8 @@ export default function newsmediaList() {
                         dataLimit={dataLimit}
                         totalData={newsmediaPaginationData.total}
                     >
-                        {newsmediaList && newsmediaList.length > 0 ? (
-                            newsmediaList.map((newmedia: any, index: number) => (
+                        {NewsmediaList && NewsmediaList.length > 0 ? (
+                            NewsmediaList.map((newmedia: any, index: number) => (
                                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-left" key={newmedia.id}>
                                     <th scope="row" className="px-2 py-3 font-normal text-gray-900 break-words">
                                         {index + 1}
