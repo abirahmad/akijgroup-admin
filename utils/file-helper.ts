@@ -15,5 +15,5 @@ export function getEmployeeAvatar(fileName: string) {
   }
 
   // return process.env?.REACT_APP_PUBLIC_API_URL + '/storage/employees/avatars/' + fileName;
-  return 'http://hr-admin-api.test/public/storage/employees/avatars/' + fileName;
+  return 'http://admin-api.test/public/storage/employees/avatars/' + fileName;
 }
