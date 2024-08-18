@@ -55,7 +55,7 @@ export default function BoardMessageList() {
     const getActionButtons = (message: IMessageView) => {
         const actions = [];
 
-        if (hasPermission('message.edit')) {
+        if (hasPermission('department.edit')) {
             actions.push({
                 element: 'Edit',
                 onClick: () => router.push(`/board-messages/edit?id=${message.id}`),
@@ -63,7 +63,7 @@ export default function BoardMessageList() {
             });
         }
 
-        if (hasPermission('message.delete')) {
+        if (hasPermission('department.delete')) {
             actions.push({
                 element: 'Delete',
                 onClick: () => handleDeleteMessageModal(message.id),

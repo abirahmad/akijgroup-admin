@@ -9,6 +9,17 @@ export const changeInputValue = (name: string, value: any, e: any) => (dispatch:
         value: value,
     }
     dispatch({ type: Types.CHANGE_INPUT_VALUE, payload: data });
+
+    if (name === "avatar") {
+        let reader = new FileReader();
+        const file = e.target.files[0];
+        reader.onloadend = () => {
+            // data.name = "avatar";
+            data.value = reader.result;
+            dispatch({ type: Types.CHANGE_INPUT_VALUE, payload: data });
+        };
+        reader.readAsDataURL(file);
+    }
 };
 			
 export const emptyNewsMediaInputAction = () => (dispatch: Dispatch) => {

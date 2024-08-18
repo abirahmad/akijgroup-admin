@@ -11,6 +11,7 @@ import { PageContent } from '@/components/layouts/PageContent';
 import { useCallback, useEffect, useState } from 'react';
 import { createNewsMedia, getNewsMediaDetails, updateNewsMedia, changeInputValue } from '@/redux/actions/newsmedia-action';
 import TextEditor from '../textEditor';
+import { getBase64 } from '@/utils/file-helper';
 
 interface INewsMediaForm {
     id: number;
@@ -24,7 +25,14 @@ export default function NewsMediaForm({ id, pageType }: INewsMediaForm) {
     const [errors, setErrors] = useState({});
 
     const handleChangeTextInput = async (name: string, value: any, e: any) => {
-        dispatch(changeInputValue(name, value, e));
+        // dispatch(changeInputValue(name, value, e));
+        if (name === 'avatar') {
+            await getBase64(value, (result: any) => {
+                dispatch(changeInputValue(name, result, e));
+            });
+        } else {
+            dispatch(changeInputValue(name, value, e));
+        }
     };
 
     const debouncedDispatch = useCallback(
@@ -94,7 +102,6 @@ export default function NewsMediaForm({ id, pageType }: INewsMediaForm) {
                         encType="multipart/form-data"
                     >
                         <div className="grid gap-2 grid-cols-1 md:grid-cols-1">
-
                             <div className='md:ml-4 col-span-4'>
                                 <div className='grid gap-2 grid-cols-1 md:grid-cols-2'>
                                     <Input
@@ -134,7 +141,26 @@ export default function NewsMediaForm({ id, pageType }: INewsMediaForm) {
                                         // errors={errors}
                                         inputChange={handleChangeTextInput}
                                     />
+                                    <div className=''>
+                                        <label htmlFor={''} className="text-sm font-medium text-gray-900 block mb-2">
+                                            Photo
+                                        </label>
+                                        <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                                <svg aria-hidden="true" className="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                                <img src={`http://admin-api.test/storage/employees/avatars/` + newsmediaInput.avatar} alt={newsmediaInput.first_name} className="h-50 w-50" />
+                                                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400">PNG or JPG (MAX. 1MB)</p>
+                                            </div>
+                                            <input id="dropzone-file" name='avatar' type="file" onChange={(e: any) => handleChangeTextInput('avatar', e.target.files[0], e)} className="hidden" />
+                                        </label>
+                                    </div>
+
                                 </div>
+
+                                {/* <div className="col-span-2">
+                              
+                            </div> */}
                             </div>
 
                         </div>
