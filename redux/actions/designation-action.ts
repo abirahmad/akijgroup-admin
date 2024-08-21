@@ -154,6 +154,7 @@ export const deleteDesignationAction = (id: any, setShowDeleteModal: any) => (di
 export const getDesignationDropdownList = () => (dispatch: Dispatch) => {
     axios.get(`/designations/dropdown/list`)
         .then((res) => {
+            console.log('res :>> ', res);
             dispatch({ type: Types.GET_DESIGNATION_DROPDOWN, payload: res.data });
         })
 }

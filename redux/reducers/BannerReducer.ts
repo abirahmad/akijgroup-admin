@@ -1,19 +1,20 @@
+import { IBANNERReducer } from './../interfaces/index';
 
 import { INewsMediaReducer } from "@/redux/interfaces";
-import * as Types from "@/redux/types/newsmedia-type";
+import * as Types from "@/redux/types/BannerType";
 
-const initialState: INewsMediaReducer = {
+const initialState: IBANNERReducer = {
     isLoading: false,
     isDeleting: false,
     isLoadingDetails: false,
     isSubmitting: false,
-    NewsmediaList: [],
-    newsmediaPaginationData: [],
-    newsmediaDetails: {},
-    newsmediaInput: {
+    bannerList: [],
+    bannerPagination: [],
+    bannerDetails: {},
+    bannerInput: {
         title: '',
-        short_description: '',
-        long_description: '',
+        description: '',
+        published: '',
         image: '',
     }
 };
@@ -22,23 +23,23 @@ const initialState: INewsMediaReducer = {
 function newsmediaReducer(state = initialState, action: any) {
     switch (action.type) {
         case Types.CHANGE_INPUT_VALUE:
-            const newsmediaInput = { ...state.newsmediaInput };
-            newsmediaInput[action.payload.name] = action.payload.value;
+            const bannerInput = { ...state.bannerInput };
+            bannerInput[action.payload.name] = action.payload.value;
             return {
                 ...state,
-                newsmediaInput,
+                bannerInput,
             };
-        case Types.EMPTY_NEWSMEDIA_INPUT:
+        case Types.EMPTY_BANNER_INPUT:
             return {
                 ...state,
-                newsmediaInput: initialState.newsmediaInput
+                bannerInput: initialState.bannerInput
             }
-        case Types.CREATE_NEWSMEDIA:
+        case Types.CREATE_BANNER:
             if (action.payload.status === true) {
                 return {
                     ...state,
                     isSubmitting: action.payload.isLoading,
-                    newsmediaInput: initialState.newsmediaInput,
+                    bannerInput: initialState.bannerInput,
                 };
             } else {
                 return {
@@ -47,7 +48,7 @@ function newsmediaReducer(state = initialState, action: any) {
                 };
             }
 
-        case Types.UPDATE_NEWSMEDIA:
+        case Types.UPDATE_BANNER:
             if (!action.payload.status || action.payload.pageType === 'profile') {
                 return {
                     ...state,
@@ -59,26 +60,26 @@ function newsmediaReducer(state = initialState, action: any) {
                 return {
                     ...state,
                     isSubmitting: action.payload.isLoading,
-                    newsmediaInput: initialState.newsmediaInput
+                    bannerInput: initialState.bannerInput
                 };
             }
 
-        case Types.GET_NEWSMEDIA_LIST:
+        case Types.GET_BANNER_LIST:
             return {
                 ...state,
                 isLoading: action.payload.isLoading,
-                NewsmediaList: action.payload.data,
-                newsmediaPaginationData: action.payload.paginationData,
+                bannerList: action.payload.data,
+                bannerPagination: action.payload.paginationData,
             };
 
-        case Types.GET_NEWSMEDIA_DETAILS:
+        case Types.GET_BANNER_DETAILS:
             return {
                 ...state,
                 isLoadingDetails: action.payload.isLoading,
-                newsmediaDetails: action.payload.data,
-                newsmediaInput: action.payload.data,
+               bannerDetails: action.payload.data,
+               bannerInput: action.payload.data,
             };
-        case Types.DELETE_NEWSMEDIA:
+        case Types.DELETE_BANNER:
             return {
                 ...state,
                 isDeleting: action.payload.isLoading,

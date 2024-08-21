@@ -10,7 +10,7 @@ export const changeInputValue = (name: string, value: any, e: any) => (dispatch:
     }
     dispatch({ type: Types.CHANGE_INPUT_VALUE, payload: data });
 
-    if (name === "avatar") {
+    if (name === "image") {
         let reader = new FileReader();
         const file = e.target.files[0];
         reader.onloadend = () => {

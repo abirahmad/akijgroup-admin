@@ -214,6 +214,16 @@ export interface INewsMediaReducer {
     newsmediaDetails: any;
     newsmediaInput: any;
 }
+export interface IBANNERReducer {
+    isLoading: boolean;
+    isDeleting: boolean;
+    isLoadingDetails: boolean;
+    isSubmitting: boolean;
+    bannerList: any[];
+    newsmediaPaginationData: any[];
+    newsmediaDetails: any;
+    bannerInput: any;
+}
 export interface IReportReducer {
     isLoading: boolean;
     isDeleting: boolean;
