@@ -10,11 +10,11 @@ import PageHeader from "@/components/layouts/PageHeader";
 import { PageContent } from "@/components/layouts/PageContent";
 import { useCallback, useEffect, useState } from "react";
 import {
-  createNewsMedia,
-  getNewsMediaDetails,
-  updateNewsMedia,
+  createBanner,
+  getBannerDetails,
+  updateBanner,
   changeInputValue,
-} from "@/redux/actions/newsmedia-action";
+} from "@/redux/actions/BannerAction";
 import TextEditor from "../textEditor";
 import { getBase64 } from "@/utils/file-helper";
 
@@ -23,11 +23,11 @@ interface INewsMediaForm {
   pageType: "create" | "edit" | "profile";
 }
 
-export default function NewsMediaForm({ id, pageType }: INewsMediaForm) {
+export default function BannerForm({ id, pageType }: INewsMediaForm) {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { newsmediaInput, isSubmitting, isLoadingDetails } = useSelector(
-    (state: RootState) => state.newsmedia
+  const { bannerInput, isSubmitting, isLoadingDetails } = useSelector(
+    (state: RootState) => state.banner
   );
   const [errors, setErrors] = useState({});
 
@@ -45,7 +45,7 @@ export default function NewsMediaForm({ id, pageType }: INewsMediaForm) {
   const debouncedDispatch = useCallback(
     debounce(() => {
       if (id > 0) {
-        dispatch(getNewsMediaDetails(id));
+        dispatch(getBannerDetails(id));
       }
     }, 500),
     [id]
@@ -59,18 +59,18 @@ export default function NewsMediaForm({ id, pageType }: INewsMediaForm) {
   const onSubmit = (e: any) => {
     e.preventDefault();
     const formattedInputObject = {
-      ...newsmediaInput,
+      ...bannerInput,
     };
 
     if (pageType === "create") {
-      dispatch(createNewsMedia(formattedInputObject, router));
+      dispatch(createBanner(formattedInputObject, router));
     } else {
-      dispatch(updateNewsMedia(formattedInputObject, router, pageType));
+      dispatch(updateBanner(formattedInputObject, router, pageType));
     }
   };
 
   const getMainPageTitle = () => {
-    return "News & Media";
+    return "Banner";
   };
 
   const getPageTitle = () => {
@@ -87,7 +87,7 @@ export default function NewsMediaForm({ id, pageType }: INewsMediaForm) {
   };
   console.log(
     "first",
-    `${process.env.NEXT_PUBLIC_URL_API}/storage/news/`+newsmediaInput.image
+    `${process.env.NEXT_PUBLIC_URL_API}/storage/news/` + bannerInput.image
   );
   return (
     <>
@@ -100,8 +100,8 @@ export default function NewsMediaForm({ id, pageType }: INewsMediaForm) {
         )}
 
         {isLoadingDetails === false &&
-          typeof newsmediaInput !== "undefined" &&
-          newsmediaInput !== null && (
+          typeof bannerInput !== "undefined" &&
+          bannerInput !== null && (
             <form
               method="post"
               autoComplete="off"
@@ -114,18 +114,18 @@ export default function NewsMediaForm({ id, pageType }: INewsMediaForm) {
                       label="Title"
                       name="title"
                       placeholder="Title"
-                      value={newsmediaInput.title}
+                      value={bannerInput.title}
                       isRequired={true}
                       inputChange={handleChangeTextInput}
                     />
-                    <Input
+                    {/* <Input
                       label="Short Description"
                       name="short_description"
                       placeholder="Short Description"
-                      value={newsmediaInput.short_description}
+                      value={bannerInput.short_description}
                       isRequired={true}
                       inputChange={handleChangeTextInput}
-                    />
+                    /> */}
                   </div>
 
                   <div className="grid gap-2 grid-cols-1 md:grid-cols-2">
@@ -133,16 +133,16 @@ export default function NewsMediaForm({ id, pageType }: INewsMediaForm) {
                                         label="Long Description"
                                         name="long_description"
                                         placeholder='Logn description'
-                                        value={newsmediaInput.long_description}
+                                        value={bannerInput.long_description}
                                         isRequired={true}
                                         inputChange={handleChangeTextInput}
                                     /> */}
 
                     <TextEditor
-                      label="Long Description"
-                      name="long_description"
+                      label=" Description"
+                      name="description"
                       placeholder="Long Desctription..."
-                      value={newsmediaInput?.long_description}
+                      value={bannerInput?.description}
                       isRequired={true}
                       // errors={errors}
                       inputChange={handleChangeTextInput}
@@ -174,14 +174,24 @@ export default function NewsMediaForm({ id, pageType }: INewsMediaForm) {
                               d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                             ></path>
                           </svg>
-                          <img src={newsmediaInput.image} alt={newsmediaInput.first_name} className=" w-36" />
-                         
-                        {pageType=='edit'?<img
-                            src={`${process.env.NEXT_PUBLIC_URL_API}/storage/news/`+newsmediaInput.image}
-                            alt={newsmediaInput.first_name}
+                          <img
+                            src={bannerInput.image}
+                            alt={bannerInput.first_name}
                             className=" w-36"
-                          />:<></>}
-                        
+                          />
+
+                          {pageType == "edit" ? (
+                            <img
+                              src={
+                                `${process.env.NEXT_PUBLIC_URL_API}/storage/banner/` +
+                                bannerInput.image
+                              }
+                              alt={bannerInput.first_name}
+                              className=" w-36"
+                            />
+                          ) : (
+                            <></>
+                          )}
 
                           <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
                             <span className="font-semibold">
@@ -194,6 +204,8 @@ export default function NewsMediaForm({ id, pageType }: INewsMediaForm) {
                           </p>
                         </div>
                         <input
+                        required={true}
+                      
                           id="dropzone-file"
                           name="image"
                           type="file"
