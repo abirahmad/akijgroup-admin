@@ -7,6 +7,7 @@ import departmentReducer from "../reducers/department-reducer";
 import messageReducer from "../reducers/message-reducer";
 import newsmediaReducer from "../reducers/newsmedia-reducer";
 import BannerReducer from "../reducers/BannerReducer";
+import BrandLogoReducer from "../reducers/BrandLogoReducer";
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     message: messageReducer,
     newsmedia: newsmediaReducer,
     banner: BannerReducer,
+    brandLogo: BrandLogoReducer,
   },
 });
 
