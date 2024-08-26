@@ -224,6 +224,16 @@ export interface IBANNERReducer {
     newsmediaDetails: any;
     bannerInput: any;
 }
+export interface IBrandLogoReducer {
+    isLoading: boolean;
+    isDeleting: boolean;
+    isLoadingDetails: boolean;
+    isSubmitting: boolean;
+    brandLogoList: any[];
+    brandLogoPagination: any[];
+    brandLogoDetails: any;
+    brandLogosInput: any;
+}
 export interface IReportReducer {
     isLoading: boolean;
     isDeleting: boolean;

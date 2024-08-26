@@ -10,7 +10,7 @@ export default function Tabs() {
     site_title: "",
     meta_description: "",
     meta_keywords: "",
-    logo_url: "",
+    logo_url: "11",
     favicon_url: "",
     footer_text: "",
   });
@@ -38,23 +38,35 @@ export default function Tabs() {
     about_mission_vision: "",
   });
 
+  const [customData, setCustomData] = useState({
+    custom1: "",
+    custom2: "",
+    custom3: "",
+    custom4: "",
+    custom5: "",
+    custom6: "",
+    custom7: "",
+  });
+
   const [data, setData] = useState({});
   useEffect(() => {
     getData();
   }, []);
   const getData = async () => {
-    let res = axios
+    let res = await axios
       .get(`/${"website-setting/1"}`)
       .then((res) => {
         setSiteSettingForm(res.data);
         setContactForm(res.data);
         setSocialForm(res.data);
         setMissionVision(res.data);
+        setCustomData(res.data);
       })
       .catch((err) => console.log("err", err));
   };
-  console.log("data :>> ", data);
+
   const handleSiteChange = async (e) => {
+    console.log("siteSettingForm  i:>> ", siteSettingForm);
     if (e.target.name == "logo_url") {
       const file = e.target.files[0];
       if (file) {
@@ -64,12 +76,11 @@ export default function Tabs() {
         };
         reader.readAsDataURL(file);
       }
-      console.log("file :>> ", file);
+
       setSiteSettingForm({
         ...siteSettingForm,
         [e.target.name]: logo,
       });
-      console.log("siteSettingForm :>> ", siteSettingForm);
     } else {
       setSiteSettingForm({
         ...siteSettingForm,
@@ -77,7 +88,8 @@ export default function Tabs() {
       });
     }
   };
-  console.log("logo", logo);
+  console.log("siteSettingForm  o:>> ", siteSettingForm);
+
   const handleContactChange = (e) => {
     setContactForm({ ...contactForm, [e.target.name]: e.target.value });
   };
@@ -87,53 +99,67 @@ export default function Tabs() {
   const handleMissionVisionChange = (e) => {
     setMissionVision({ ...missionVision, [e.target.name]: e.target.value });
   };
+  const handleCustomDataChange = (e) => {
+    setCustomData({ ...customData, [e.target.name]: e.target.value });
+  };
 
   const handleSiteSubmit = (e) => {
+    e.preventDefault();
     console.log("siteSettingForm", siteSettingForm);
     siteSettingForm.logo_url = logo;
     axios
       .put("website-setting/1", siteSettingForm)
-      .then((res) => Toaster('success',res.message+''))
+      .then((res) => Toaster("success", res.message + ""))
       .catch((err) => console.log("err :>> ", err));
-    e.preventDefault();
+
     // Handle form submission logic here
   };
   const handleContactSubmit = (e) => {
     e.preventDefault();
     axios
       .put("website-setting/1", contactForm)
-      .then((res) => Toaster('success',res.message+''))
+      .then((res) => Toaster("success", res.message + ""))
       .catch((err) => console.log("err :>> ", err));
-    e.preventDefault();
+
     // Handle form submission logic here
-    console.log(siteSettingForm);
-    console.log(contactForm);
   };
   const handleSocialSubmit = (e) => {
     e.preventDefault();
     axios
       .put("website-setting/1", socialForm)
-      .then((res) => Toaster('success',res.message+''))
+      .then((res) => Toaster("success", res.message + ""))
       .catch((err) => console.log("err :>> ", err));
-    e.preventDefault();
     // Handle form submission logic here
-    console.log(siteSettingForm);
-    // Handle form submission logic here
-    console.log(socialForm);
   };
   const handleMissionVisionSubmit = (e) => {
     e.preventDefault();
     axios
       .put("website-setting/1", missionVision)
-      .then((res) => Toaster('success',res.message+''))
+      .then((res) => Toaster("success", res.message + ""))
       .catch((err) => console.log("err :>> ", err));
-    e.preventDefault();
+
     // Handle form submission logic here
-    console.log(siteSettingForm);
-    // Handle form submission logic here
-    console.log(missionVision);
   };
-  const tabs = ["Site Setting", "Contact", "Social", "Mission Vision"];
+  const handleCustomDataSubmit = (e) => {
+    e.preventDefault();
+    console.log(customData);
+    // return
+    axios
+      .put("website-setting/1", customData)
+      .then((res) => Toaster("success", res.message + ""))
+      .catch((err) => console.log("err :>> ", err));
+
+    // Handle form submission logic here
+
+    // Handle form submission logic here
+  };
+  const tabs = [
+    "Site Setting",
+    "Contact",
+    "Social",
+    "Mission Vision",
+    "Custom Input",
+  ];
   const tabContent = [
     <form
       className="  bg-gray-200 p-2 rounded-lg  shadow-lg grid grid-cols-3 gap-3"
@@ -194,8 +220,9 @@ export default function Tabs() {
           htmlFor="logo_url"
           className="block text-sm font-medium text-gray-700"
         >
-          Logo URL
-        </label>
+          Logo URL{" "}
+         
+        </label> 
         <input
           type="file"
           name="logo_url"
@@ -204,6 +231,14 @@ export default function Tabs() {
           onChange={handleSiteChange}
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
         />
+         <img
+            src={
+              `${process.env.NEXT_PUBLIC_URL_API}/storage/logo/` +
+              siteSettingForm.logo_url
+            }
+            alt=""
+          className="w-[50px]"
+          />
       </div>
 
       <div>
@@ -541,6 +576,125 @@ export default function Tabs() {
           id="vision"
           value={missionVision.vision}
           onChange={handleMissionVisionChange}
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+        />
+      </div>
+
+      <div className="text-center p-3">
+        <button
+          type="submit"
+          className="  py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        >
+          Save Settings
+        </button>
+      </div>
+    </form>,
+    <form
+      onSubmit={handleCustomDataSubmit}
+      className="  bg-gray-200 p-2 rounded-lg  shadow-lg grid grid-cols-3 gap-3"
+    >
+      <div className="mb-4">
+        <label
+          htmlFor="custom1"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Custom 1
+        </label>
+        <input
+          type="text"
+          name="custom1"
+          value={customData.custom1}
+          onChange={handleCustomDataChange}
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+        />
+      </div>
+      <div className="mb-4">
+        <label
+          htmlFor="custom1"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Custom 2
+        </label>
+        <input
+          type="text"
+          name="custom2"
+          value={customData.custom2}
+          onChange={handleCustomDataChange}
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+        />
+      </div>
+      <div className="mb-4">
+        <label
+          htmlFor="custom1"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Custom 3
+        </label>
+        <input
+          type="text"
+          name="custom3"
+          value={customData.custom3}
+          onChange={handleCustomDataChange}
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+        />
+      </div>
+      <div className="mb-4">
+        <label
+          htmlFor="custom1"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Custom 4
+        </label>
+        <input
+          type="text"
+          name="custom4"
+          value={customData.custom4}
+          onChange={handleCustomDataChange}
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+        />
+      </div>
+      <div className="mb-4">
+        <label
+          htmlFor="custom1"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Custom 5
+        </label>
+        <input
+          type="text"
+          name="custom5"
+          value={customData.custom5}
+          onChange={handleCustomDataChange}
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+        />
+      </div>
+      <div className="mb-4">
+        <label
+          htmlFor="custom1"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Custom 6
+        </label>
+        <input
+          type="text"
+          name="custom6"
+          value={customData.custom6}
+          onChange={handleCustomDataChange}
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+        />
+      </div>
+      <div className="mb-4">
+        <label
+          htmlFor="custom1"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Akij' Message
+        </label>
+        <textarea
+          type="text"
+          name="custom7"
+          value={customData.custom7}
+          onChange={handleCustomDataChange}
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
         />
       </div>

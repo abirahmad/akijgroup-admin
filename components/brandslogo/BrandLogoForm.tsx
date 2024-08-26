@@ -10,11 +10,11 @@ import PageHeader from "@/components/layouts/PageHeader";
 import { PageContent } from "@/components/layouts/PageContent";
 import { useCallback, useEffect, useState } from "react";
 import {
-  createBanner,
-  getBannerDetails,
-  updateBanner,
+  createBrandLogo,
+  getBrandsLogoDetails,
+  updateBrandsLogo,
   changeInputValue,
-} from "@/redux/actions/BannerAction";
+} from "@/redux/actions/BrandLogoAction";
 import TextEditor from "../textEditor";
 import { getBase64 } from "@/utils/file-helper";
 
@@ -23,15 +23,17 @@ interface INewsMediaForm {
   pageType: "create" | "edit" | "profile";
 }
 
-export default function BannerForm({ id, pageType }: INewsMediaForm) {
+export default function BrandLogoForm({ id, pageType }: INewsMediaForm) {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { bannerInput, isSubmitting, isLoadingDetails } = useSelector(
-    (state: RootState) => state.banner
+  const { brandLogosInput, isSubmitting, isLoadingDetails } = useSelector(
+    (state: RootState) => state.brandLogo
   );
   const [errors, setErrors] = useState({});
 
   const handleChangeTextInput = async (name: string, value: any, e: any) => {
+    console.log("name", name);
+    console.log("value", value);
     // dispatch(changeInputValue(name, value, e));
     if (name === "image") {
       await getBase64(value, (result: any) => {
@@ -45,7 +47,7 @@ export default function BannerForm({ id, pageType }: INewsMediaForm) {
   const debouncedDispatch = useCallback(
     debounce(() => {
       if (id > 0) {
-        dispatch(getBannerDetails(id));
+        dispatch(getBrandsLogoDetails(id));
       }
     }, 500),
     [id]
@@ -59,18 +61,19 @@ export default function BannerForm({ id, pageType }: INewsMediaForm) {
   const onSubmit = (e: any) => {
     e.preventDefault();
     const formattedInputObject = {
-      ...bannerInput,
+      ...brandLogosInput,
     };
 
     if (pageType === "create") {
-      dispatch(createBanner(formattedInputObject, router));
+      console.log('create--');
+      dispatch(createBrandLogo(formattedInputObject, router));
     } else {
-      dispatch(updateBanner(formattedInputObject, router, pageType));
+      dispatch(updateBrandsLogo(formattedInputObject, router, pageType));
     }
   };
 
   const getMainPageTitle = () => {
-    return "Banner";
+    return "Brands Logo";
   };
 
   const getPageTitle = () => {
@@ -85,7 +88,7 @@ export default function BannerForm({ id, pageType }: INewsMediaForm) {
 
     return title;
   };
-  
+
   return (
     <>
       <PageHeader title={getPageTitle()} hasSearch={false} />
@@ -97,8 +100,8 @@ export default function BannerForm({ id, pageType }: INewsMediaForm) {
         )}
 
         {isLoadingDetails === false &&
-          typeof bannerInput !== "undefined" &&
-          bannerInput !== null && (
+          typeof brandLogosInput !== "undefined" &&
+          brandLogosInput !== null && (
             <form
               method="post"
               autoComplete="off"
@@ -111,18 +114,31 @@ export default function BannerForm({ id, pageType }: INewsMediaForm) {
                       label="Title"
                       name="title"
                       placeholder="Title"
-                      value={bannerInput.title}
+                      value={brandLogosInput.title}
                       isRequired={true}
                       inputChange={handleChangeTextInput}
                     />
-                    {/* <Input
-                      label="Short Description"
-                      name="short_description"
-                      placeholder="Short Description"
-                      value={bannerInput.short_description}
-                      isRequired={true}
-                      inputChange={handleChangeTextInput}
-                    /> */}
+                  </div>
+                  <div className="mb-4 ">
+                    <label
+                      htmlFor="select-brand"
+                      className="text-sm font-medium text-gray-900 block mb-2"
+                    >
+                      Select Brand
+                    </label>
+                    <select
+                      required
+                      id="select-brand"
+                      name="is_brand"
+                      onChange={(e) =>
+                        handleChangeTextInput("is_brand", e.target.value, e)
+                      }
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    >
+                      <option value="">--select--</option>
+                      <option value={1}>Brand</option>
+                      <option value={0}>Logo</option>
+                    </select>
                   </div>
 
                   <div className="grid gap-2 grid-cols-1 md:grid-cols-2">
@@ -130,7 +146,7 @@ export default function BannerForm({ id, pageType }: INewsMediaForm) {
                                         label="Long Description"
                                         name="long_description"
                                         placeholder='Logn description'
-                                        value={bannerInput.long_description}
+                                        value={brandLogosInput.long_description}
                                         isRequired={true}
                                         inputChange={handleChangeTextInput}
                                     /> */}
@@ -139,11 +155,12 @@ export default function BannerForm({ id, pageType }: INewsMediaForm) {
                       label=" Description"
                       name="description"
                       placeholder="Long Desctription..."
-                      value={bannerInput?.description}
+                      value={brandLogosInput?.description}
                       isRequired={true}
                       // errors={errors}
                       inputChange={handleChangeTextInput}
                     />
+
                     <div className="">
                       <label
                         htmlFor={""}
@@ -172,18 +189,18 @@ export default function BannerForm({ id, pageType }: INewsMediaForm) {
                             ></path>
                           </svg>
                           <img
-                            src={bannerInput.image}
-                            alt={bannerInput.first_name}
+                            src={brandLogosInput.image}
+                            alt={brandLogosInput.first_name}
                             className=" w-36"
                           />
 
                           {pageType == "edit" ? (
                             <img
                               src={
-                                `${process.env.NEXT_PUBLIC_URL_API}/storage/banner/` +
-                                bannerInput.image
+                                `${process.env.NEXT_PUBLIC_URL_API}/storage/brands/` +
+                                brandLogosInput.image
                               }
-                              alt={bannerInput.first_name}
+                              alt={brandLogosInput.first_name}
                               className=" w-36"
                             />
                           ) : (
@@ -201,8 +218,7 @@ export default function BannerForm({ id, pageType }: INewsMediaForm) {
                           </p>
                         </div>
                         <input
-                        required={true}
-                      
+                          required={true}
                           id="dropzone-file"
                           name="image"
                           type="file"
